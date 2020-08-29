@@ -212,7 +212,7 @@ Replace `<id>` with user id.
           setState(() {
             isLoading = true;
           });
-  
+
         //convert json response to class
         SingleUserResponse response = SingleUserResponse.fromJson(
           await ApiManager(context).getCall(
@@ -220,13 +220,13 @@ Replace `<id>` with user id.
             request: null,
           ),
         );
-  
+
         //hide progress
         if (mounted)
           setState(() {
             isLoading = false;
           });
-  
+
         if (response?.data != null) {
           if (mounted) {
             setState(() {
@@ -240,3 +240,8 @@ Replace `<id>` with user id.
       }
     }
 
+Finally
+
+    flutter run
+
+##### Please refer to my [blogs](https://ankitsolanki.netlify.app/blog.html) for more information.
