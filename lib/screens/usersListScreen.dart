@@ -22,7 +22,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
   bool stop = false;
 
   getUsers() async {
+    //first check for internet connectivity
     if (await ApiManager.checkInternet()) {
+      //show progress
       if (mounted)
         setState(() {
           isLoading = true;
@@ -32,13 +34,15 @@ class _UsersListScreenState extends State<UsersListScreen> {
       var request = Map<String, dynamic>();
       request["page"] = page.toString();
 
+      //convert json response to class
       UsersResponse response = UsersResponse.fromJson(
         await ApiManager(context).getCall(
-          AppStrings.USERS,
-          request,
+          url: AppStrings.USERS,
+          request: request,
         ),
       );
 
+      //hide progress
       if (mounted)
         setState(() {
           isLoading = false;
@@ -48,21 +52,24 @@ class _UsersListScreenState extends State<UsersListScreen> {
         if (response.data.length > 0) {
           if (mounted) {
             setState(() {
+              //add paginated list data in list
               userDetails.addAll(response.data);
             });
           }
         } else {
-          nodatalogic(page);
+          noDataLogic(page);
         }
       } else {
-        nodatalogic(page);
+        noDataLogic(page);
       }
     } else {
+      //if no internet connectivity available then show apecific message
       Utility.showToast("No Internet Connection");
     }
   }
 
-  nodatalogic(int pagenum) {
+  noDataLogic(int pagenum) {
+    //show empty view
     if (mounted) {
       setState(() {
         page = pagenum - 1;
@@ -72,6 +79,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
   }
 
   refresh() {
+    //to refresh page
     if (mounted)
       setState(() {
         valueKey = valueKey + 1;
@@ -112,6 +120,11 @@ class _UsersListScreenState extends State<UsersListScreen> {
         refresh();
       },
       child: !isLoading && userDetails.length == 0
+          /*
+
+            i have shown empty view in list view because refresh indicator will not work if there is no list.
+
+          */
           ? ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               children: <Widget>[
@@ -123,6 +136,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
                 ),
               ],
             )
+
+          //try this code you can see that refresh indicator will not work
+          // return Utility.emptyView("No Users");
+
           : ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.only(
@@ -131,6 +148,12 @@ class _UsersListScreenState extends State<UsersListScreen> {
               itemCount: userDetails.length,
               itemBuilder: (BuildContext context, int index) {
                 return (userDetails.length - 1) == index
+                    /*
+
+                      VisibilityDetector is only attached to last item of list.
+                      when this view is visible we will call api for next page.
+
+                    */
                     ? VisibilityDetector(
                         key: Key(index.toString()),
                         child: itemView(index),
@@ -147,6 +170,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
   }
 
   Widget itemView(int index) {
+    //users item view
     return ListTile(
       leading: ClipRRect(
         child: Utility.imageLoader(

@@ -1,3 +1,9 @@
+/*
+
+JSON api response converted to dart class from - https://javiercbk.github.io/json_to_dart/
+
+*/
+
 class UsersResponse {
   int page;
   int perPage;

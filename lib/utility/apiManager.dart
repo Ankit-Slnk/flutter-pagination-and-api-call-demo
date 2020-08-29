@@ -25,17 +25,18 @@ class ApiManager {
     }
   }
 
-  postCall(String url, Map request) async {
+  postCall({@required String url, @required Map request}) async {
     http.Response response = await http.post(url, body: request);
     return await json.decode(response.body);
   }
 
-  deleteCall(String url) async {
+  deleteCall({@required String url}) async {
     http.Response response = await http.delete(url);
     return await jsonDecode(response.body);
   }
 
-  getCall(String url, Map<String, dynamic> request) async {
+  getCall(
+      {@required String url, @required Map<String, dynamic> request}) async {
     var uri = Uri.parse(url);
     uri = uri.replace(queryParameters: request);
     http.Response response = await http.get(uri);

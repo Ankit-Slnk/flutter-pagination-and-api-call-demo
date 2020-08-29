@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutterPaginationApi/screens/usersListScreen.dart';
@@ -14,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // three second of delay for splash screen to display and the redirect to home
     Timer(Duration(seconds: 3), gotoHome);
   }
 

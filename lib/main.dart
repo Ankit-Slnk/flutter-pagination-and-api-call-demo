@@ -1,3 +1,12 @@
+/*
+
+Code written by :
+Ankit Solanki
+Mobile Application Developer
+Android • iOS • Flutter
+
+*/
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterPaginationApi/screens/splashScreen.dart';
