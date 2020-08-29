@@ -1,0 +1,44 @@
+import 'dart:convert';
+
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class ApiManager {
+  BuildContext context;
+
+  ApiManager(BuildContext context) {
+    this.context = context;
+  }
+
+  static Future<bool> checkInternet() async {
+    try {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  postCall(String url, Map request) async {
+    http.Response response = await http.post(url, body: request);
+    return await json.decode(response.body);
+  }
+
+  deleteCall(String url) async {
+    http.Response response = await http.delete(url);
+    return await jsonDecode(response.body);
+  }
+
+  getCall(String url, Map<String, dynamic> request) async {
+    var uri = Uri.parse(url);
+    uri = uri.replace(queryParameters: request);
+    http.Response response = await http.get(uri);
+    return await jsonDecode(response.body);
+  }
+}
