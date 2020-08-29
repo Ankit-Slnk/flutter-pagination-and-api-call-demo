@@ -30,7 +30,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.whiteColor,
-      body: FlutterLogo(),
+      body: Center(
+        child: FlutterLogo(
+          size: 200,
+        ),
+      ),
     );
   }
 }

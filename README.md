@@ -46,7 +46,7 @@ No Setup required.
 
 ### GET Request
 
-    GET     https://reqres.in/api/users
+    GET     https://reqres.in/api/users?page=<page_number>
 
 Convert `JSON` response from this api to `dart class` using [JSON to Dart](https://javiercbk.github.io/json_to_dart/).
 
@@ -120,57 +120,123 @@ Now we need to convert this `json` response to `class`.
 ##### View to show paginated data in list
 
     Widget body() {
-        return RefreshIndicator(
-            key: _refreshIndicatorKey,
-            onRefresh: () async {
+      return Stack(
+        children: <Widget>[
+            RefreshIndicator(
+              key: _refreshIndicatorKey,
+              onRefresh: () async {
                 refresh();
-            },
-            child: !isLoading && userDetails.length == 0
-                /*
+              },
+              child: !isLoading && userDetails.length == 0
+                  /*
 
-                    i have shown empty view in list view because refresh indicator will not work if there is no list.
+                    i have shown empty view in list view because refresh indicator will not work if there is no   list.
 
-                */
-                ? ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: <Widget>[
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height -
-                            ((AppBar().preferredSize.height * 2) + 30),
-                        child: Utility.emptyView("No Users"),
+                  */
+                  ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height -
+                              ((AppBar().preferredSize.height * 2) + 30),
+                          child: Utility.emptyView("No Users"),
+                        ),
+                      ],
+                    )
+
+                  //try this code you can see that refresh indicator will not work
+                  // return Utility.emptyView("No Users");
+
+                  : ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(
+                        bottom: 12,
                       ),
-                    ],
-                  )
+                      itemCount: userDetails.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: <Widget>[
+                            (userDetails.length - 1) == index
+                                /*
 
-                //try this code you can see that refresh indicator will not work
-                // return Utility.emptyView("No Users");
-
-                : ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(
-                      bottom: 12,
-                    ),
-                    itemCount: userDetails.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return (userDetails.length - 1) == index
-                            /*
-
-                                VisibilityDetector is only attached to last item of list.
-                                when this view is visible we will call api for next page.
+                              VisibilityDetector is only attached to last item of list.
+                              when this view is visible we will call api for next page.
 
                             */
-                            ? VisibilityDetector(
-                                key: Key(index.toString()),
-                                child: itemView(index),
-                                onVisibilityChanged: (visibilityInfo) {
-                                    if (!stop) {
+                                ? VisibilityDetector(
+                                    key: Key(index.toString()),
+                                    child: itemView(index),
+                                    onVisibilityChanged: (visibilityInfo) {
+                                      if (!stop) {
                                         getUsers();
-                                    }
-                                },
-                            )
-                            : itemView(index);
-                    },
-                ),
-        );
+                                      }
+                                    },
+                                  )
+                                : itemView(index)
+                          ],
+                        );
+                      },
+                    ),
+            ),
+            //show progress
+            isLoading ? Utility.progress(context) : Container()
+        ],
+      );
     }
+
+
+Put a click on users itemview to redirect to `UserDetailScreen`
+
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (BuildContext context) => UserDetailScreen(
+          id: userDetails[index].id,
+        ),
+      ),
+    );
+
+### POST Request
+
+    POST     https://reqres.in/api/users/<id>
+
+Replace `<id>` with user id.
+
+#### Function to call single user
+
+    getUser() async {
+      //first check for internet connectivity
+      if (await ApiManager.checkInternet()) {
+        //show progress
+        if (mounted)
+          setState(() {
+            isLoading = true;
+          });
+  
+        //convert json response to class
+        SingleUserResponse response = SingleUserResponse.fromJson(
+          await ApiManager(context).getCall(
+            url: AppStrings.USERS + "/" + widget.id.toString(),
+            request: null,
+          ),
+        );
+  
+        //hide progress
+        if (mounted)
+          setState(() {
+            isLoading = false;
+          });
+  
+        if (response?.data != null) {
+          if (mounted) {
+            setState(() {
+              userDetails = response.data;
+            });
+          }
+        }
+      } else {
+        //if no internet connectivity available then show apecific message
+        Utility.showToast("No Internet Connection");
+      }
+    }
+

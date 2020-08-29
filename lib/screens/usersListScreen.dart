@@ -7,6 +7,8 @@ import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'userDetailScreen.dart';
+
 class UsersListScreen extends StatefulWidget {
   @override
   _UsersListScreenState createState() => _UsersListScreenState();
@@ -100,12 +102,12 @@ class _UsersListScreenState extends State<UsersListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           "Users",
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
-            color: AppColors.blackColor,
           ),
         ),
       ),
@@ -114,68 +116,92 @@ class _UsersListScreenState extends State<UsersListScreen> {
   }
 
   Widget body() {
-    return RefreshIndicator(
-      key: _refreshIndicatorKey,
-      onRefresh: () async {
-        refresh();
-      },
-      child: !isLoading && userDetails.length == 0
-          /*
+    return Stack(
+      children: <Widget>[
+        RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            refresh();
+          },
+          child: !isLoading && userDetails.length == 0
+              /*
 
-            i have shown empty view in list view because refresh indicator will not work if there is no list.
+                i have shown empty view in list view because refresh indicator will not work if there is no list.
 
-          */
-          ? ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height -
-                      ((AppBar().preferredSize.height * 2) + 30),
-                  child: Utility.emptyView("No Users"),
+              */
+              ? ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height -
+                          ((AppBar().preferredSize.height * 2) + 30),
+                      child: Utility.emptyView("No Users"),
+                    ),
+                  ],
+                )
+
+              //try this code you can see that refresh indicator will not work
+              // return Utility.emptyView("No Users");
+
+              : ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(
+                    bottom: 12,
+                  ),
+                  itemCount: userDetails.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: <Widget>[
+                        (userDetails.length - 1) == index
+                            /*
+
+                          VisibilityDetector is only attached to last item of list.
+                          when this view is visible we will call api for next page.
+
+                        */
+                            ? VisibilityDetector(
+                                key: Key(index.toString()),
+                                child: itemView(index),
+                                onVisibilityChanged: (visibilityInfo) {
+                                  if (!stop) {
+                                    getUsers();
+                                  }
+                                },
+                              )
+                            : itemView(index)
+                      ],
+                    );
+                  },
                 ),
-              ],
-            )
-
-          //try this code you can see that refresh indicator will not work
-          // return Utility.emptyView("No Users");
-
-          : ListView.builder(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(
-                bottom: 12,
-              ),
-              itemCount: userDetails.length,
-              itemBuilder: (BuildContext context, int index) {
-                return (userDetails.length - 1) == index
-                    /*
-
-                      VisibilityDetector is only attached to last item of list.
-                      when this view is visible we will call api for next page.
-
-                    */
-                    ? VisibilityDetector(
-                        key: Key(index.toString()),
-                        child: itemView(index),
-                        onVisibilityChanged: (visibilityInfo) {
-                          if (!stop) {
-                            getUsers();
-                          }
-                        },
-                      )
-                    : itemView(index);
-              },
-            ),
+        ),
+        //show progress
+        isLoading ? Utility.progress(context) : Container()
+      ],
     );
   }
 
   Widget itemView(int index) {
     //users item view
     return ListTile(
-      leading: ClipRRect(
-        child: Utility.imageLoader(
-          userDetails[index].avatar,
-          AppAssets.imagePlaceholder,
+      onTap: () {
+        Navigator.of(context).push(
+          new MaterialPageRoute(
+            builder: (BuildContext context) => UserDetailScreen(
+              id: userDetails[index].id,
+            ),
+          ),
+        );
+      },
+      leading: Container(
+        height: 50,
+        width: 50,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Utility.imageLoader(
+            userDetails[index].avatar,
+            AppAssets.imagePlaceholder,
+          ),
         ),
       ),
       title: Text(

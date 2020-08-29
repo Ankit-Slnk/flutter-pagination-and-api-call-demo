@@ -56,11 +56,11 @@ class UserDetails {
       {this.id, this.email, this.firstName, this.lastName, this.avatar});
 
   UserDetails.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    email = json['email'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    avatar = json['avatar'];
+    id = json['id'] ?? 0;
+    email = json['email'] ?? "";
+    firstName = json['first_name'] ?? "";
+    lastName = json['last_name'] ?? "";
+    avatar = json['avatar'] ?? "";
   }
 
   Map<String, dynamic> toJson() {
