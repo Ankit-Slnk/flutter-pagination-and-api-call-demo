@@ -54,4 +54,14 @@ class Utility {
       ),
     );
   }
+
+  static Image imageLoaderImage(String url, String placeholder) {
+    return url == null || url == ""
+        ? Image.asset(placeholder)
+        : Image.network(
+            url,
+            // (url.startsWith("http")) ? url : AppStrings.IMAGEBASE_URL + url,
+            fit: BoxFit.contain,
+          );
+  }
 }

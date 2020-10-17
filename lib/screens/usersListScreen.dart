@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-import 'package:flutterPaginationApi/utility/appAssets.dart';
-import 'package:flutterPaginationApi/utility/appColors.dart';
+import 'package:flutterPaginationApi/utility/appDimens.dart';
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
+import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
+import 'package:flutterPaginationApi/widgets/userItemView.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import 'userDetailScreen.dart';
@@ -22,6 +23,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
       new GlobalKey<RefreshIndicatorState>();
   bool isLoading = false;
   bool stop = false;
+  AppDimens appDimens;
 
   getUsers() async {
     //first check for internet connectivity
@@ -100,13 +102,14 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    appDimens = new AppDimens(MediaQuery.of(context).size);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
           "Users",
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: appDimens.text18,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -183,7 +186,8 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
   Widget itemView(int index) {
     //users item view
-    return ListTile(
+    return UserItemView(
+      userDetails: userDetails[index],
       onTap: () {
         Navigator.of(context).push(
           new MaterialPageRoute(
@@ -193,31 +197,16 @@ class _UsersListScreenState extends State<UsersListScreen> {
           ),
         );
       },
-      leading: Container(
-        height: 50,
-        width: 50,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Utility.imageLoader(
-            userDetails[index].avatar,
-            AppAssets.imagePlaceholder,
+      onImageTap: () {
+        Navigator.of(context).push(
+          new MaterialPageRoute(
+            builder: (BuildContext context) => FullScrennImageSlider(
+              imagelist: [userDetails[index].avatar],
+              selectedimage: 0,
+            ),
           ),
-        ),
-      ),
-      title: Text(
-        userDetails[index].firstName + " " + userDetails[index].lastName,
-        style: TextStyle(
-          fontSize: 18,
-          color: AppColors.blackColor,
-        ),
-      ),
-      subtitle: Text(
-        userDetails[index].email,
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.greyColor,
-        ),
-      ),
+        );
+      },
     );
   }
 }

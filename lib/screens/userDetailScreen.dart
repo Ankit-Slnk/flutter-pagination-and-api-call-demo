@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutterPaginationApi/models/SingleUserResponse.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-import 'package:flutterPaginationApi/utility/appAssets.dart';
-import 'package:flutterPaginationApi/utility/appColors.dart';
+import 'package:flutterPaginationApi/utility/appDimens.dart';
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
+import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
+import 'package:flutterPaginationApi/widgets/userEmailView.dart';
+import 'package:flutterPaginationApi/widgets/userImageView.dart';
+import 'package:flutterPaginationApi/widgets/userNameView.dart';
+
+import '../utility/appColors.dart';
 
 class UserDetailScreen extends StatefulWidget {
   int id;
@@ -17,6 +22,7 @@ class UserDetailScreen extends StatefulWidget {
 class _UserDetailScreenState extends State<UserDetailScreen> {
   bool isLoading = false;
   UserDetails userDetails = UserDetails();
+  AppDimens appDimens;
 
   @override
   void initState() {
@@ -62,61 +68,99 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    appDimens = new AppDimens(MediaQuery.of(context).size);
+
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "User Detail",
-          style: TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      body: itemView(),
+      body: body(),
     );
   }
 
-  Widget itemView() {
-    //users item view
+  Widget body() {
     return Stack(
-      children: <Widget>[
-        userDetails == null
-            ? Container()
-            : ListTile(
-                leading: Container(
-                  height: 50,
-                  width: 50,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Utility.imageLoader(
-                      userDetails.avatar,
-                      AppAssets.imagePlaceholder,
+      children: [
+        Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: kToolbarHeight),
+                  height: kToolbarHeight * 2,
+                  decoration: BoxDecoration(
+                    color: AppColors.appColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0.0, 1.0), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ],
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        BackButton(
+                          color: AppColors.whiteColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                title: Text(
-                  (userDetails?.firstName == null
-                          ? ""
-                          : userDetails.firstName) +
-                      " " +
-                      (userDetails?.lastName == null
-                          ? ""
-                          : userDetails.lastName),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.blackColor,
+                Container(
+                  alignment: Alignment.center,
+                  height: kToolbarHeight * 3,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: kToolbarHeight,
+                      ),
+                      UserImageView(
+                        userDetails: userDetails,
+                        onImageTap: () {
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  FullScrennImageSlider(
+                                imagelist: [userDetails.avatar],
+                                selectedimage: 0,
+                              ),
+                            ),
+                          );
+                        },
+                        isDetailScreen: true,
+                      ),
+                    ],
                   ),
                 ),
-                subtitle: Text(
-                  userDetails?.email == null ? "" : userDetails.email,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.greyColor,
-                  ),
-                ),
-              ),
+              ],
+            ),
+            userNameView()
+          ],
+        ),
         isLoading ? Utility.progress(context) : Container()
+      ],
+    );
+  }
+
+  Widget userNameView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        UserNameView(
+          isDetailScreen: true,
+          userDetails: userDetails,
+        ),
+        SizedBox(
+          height: appDimens.paddingw4,
+        ),
+        UserEmailView(
+          userDetails: userDetails,
+          isDetailScreen: true,
+        )
       ],
     );
   }
