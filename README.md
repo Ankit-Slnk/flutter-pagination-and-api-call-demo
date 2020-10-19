@@ -2,6 +2,8 @@
 
 This demo will show us how to call `post` and `get` HTTP request in flutter. This will also show us how to use `pagination` in list.
 
+![Flutter Pagination & Api Call Demo](flutter_pagination_api_call.gif)
+
 We will be using [REQ | RES](https://reqres.in/), which simulates real api.
 
 ## Setup
