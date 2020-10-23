@@ -16,11 +16,8 @@ class UserItemView extends StatelessWidget {
     @required this.onImageTap,
   });
 
-  AppDimens appDimens;
-
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
     return ListTile(
       onTap: onTap,
       leading: UserImageView(
