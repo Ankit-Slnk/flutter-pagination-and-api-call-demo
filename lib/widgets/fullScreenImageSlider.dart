@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -21,7 +21,6 @@ class FullScrennImageSlider extends StatefulWidget {
 }
 
 class _FullScrennImageSliderState extends State<FullScrennImageSlider> {
-  AppDimens appDimens;
   var _current = 0;
 
   @override
@@ -32,7 +31,6 @@ class _FullScrennImageSliderState extends State<FullScrennImageSlider> {
 
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,

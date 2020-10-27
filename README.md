@@ -16,6 +16,7 @@ Use latest versions of below mentioned plugins in `pubspec.yaml`.
 | [connectivity](https://github.com/flutter/plugins/tree/master/packages/connectivity/connectivity) | [![pub package](https://img.shields.io/pub/v/connectivity.svg)](https://pub.dev/packages/connectivity) | Used to check internet connectivity.
 | [visibility_detector](https://github.com/google/flutter.widgets) | [![pub package](https://img.shields.io/pub/v/visibility_detector.svg)](https://pub.dev/packages/visibility_detector) | Detect the visibility of widget. Used for pagination.
 [cached_network_image](https://github.com/Baseflow/flutter_cached_network_image) | [![pub package](https://img.shields.io/pub/v/cached_network_image.svg)](https://pub.dev/packages/cached_network_image) | Caching image loaded from internet.
+[velocity_x](https://github.com/iampawan/VelocityX) | [![pub package](https://img.shields.io/pub/v/velocity_x.svg)](https://pub.dev/packages/velocity_x) | Open-source minimalist UI Framework built with Flutter SDK.
 
 And then
 
@@ -247,3 +248,5 @@ Finally
     flutter run
 
 ##### Please refer to my [blogs](https://ankitsolanki.netlify.app/blog.html) for more information.
+
+Checkout [this demo](https://flutter-web-pagination-api-call.netlify.app/#/) in [Flutter Web](https://flutter.dev/docs/get-started/web).

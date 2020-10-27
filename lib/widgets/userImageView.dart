@@ -17,7 +17,7 @@ class UserImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onImageTap,
       child: Container(
         height: isDetailScreen ? 100 : 50,

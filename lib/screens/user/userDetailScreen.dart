@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutterPaginationApi/bloc/selectedUserIdBloc.dart';
 import 'package:flutterPaginationApi/models/SingleUserResponse.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
+import 'package:flutterPaginationApi/screens/user/userScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
 import 'package:flutterPaginationApi/widgets/userEmailView.dart';
 import 'package:flutterPaginationApi/widgets/userImageView.dart';
 import 'package:flutterPaginationApi/widgets/userNameView.dart';
+import 'package:velocity_x/velocity_x.dart';
 
-import '../utility/appColors.dart';
+import '../../utility/appColors.dart';
 
 class UserDetailScreen extends StatefulWidget {
-  int id;
-  UserDetailScreen({@required this.id});
+  int selectedUserId;
+  UserDetailScreen({
+    @required this.selectedUserId,
+  });
   @override
   _UserDetailScreenState createState() => _UserDetailScreenState();
 }
@@ -22,15 +27,20 @@ class UserDetailScreen extends StatefulWidget {
 class _UserDetailScreenState extends State<UserDetailScreen> {
   bool isLoading = false;
   UserDetails userDetails = UserDetails();
-  AppDimens appDimens;
 
   @override
   void initState() {
     super.initState();
-    getUser();
+    if (widget.selectedUserId == null) {
+      SelectedUserIdBloc.getSteam.listen((event) {
+        getUser(event);
+      });
+    } else {
+      getUser(widget.selectedUserId);
+    }
   }
 
-  getUser() async {
+  getUser(int selectedUserId) async {
     //first check for internet connectivity
     if (await ApiManager.checkInternet()) {
       //show progress
@@ -42,7 +52,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
       //convert json response to class
       SingleUserResponse response = SingleUserResponse.fromJson(
         await ApiManager(context).getCall(
-          url: AppStrings.USERS + "/" + widget.id.toString(),
+          url: AppStrings.USERS + "/" + selectedUserId.toString(),
           request: null,
         ),
       );
@@ -68,8 +78,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
-
     return Scaffold(
       body: body(),
     );
@@ -95,19 +103,21 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       ),
                     ],
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        BackButton(
-                          color: AppColors.whiteColor,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                  child: Utility.isNotMobileAndLandscape(context)
+                      ? Container()
+                      : Container(
+                          alignment: Alignment.center,
+                          child: Row(
+                            children: [
+                              BackButton(
+                                color: AppColors.whiteColor,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
                 ),
                 Container(
                   alignment: Alignment.center,
@@ -155,7 +165,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           userDetails: userDetails,
         ),
         SizedBox(
-          height: appDimens.paddingw4,
+          height: Vx.dp4,
         ),
         UserEmailView(
           userDetails: userDetails,

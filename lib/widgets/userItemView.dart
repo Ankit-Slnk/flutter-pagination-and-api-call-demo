@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
 import 'package:flutterPaginationApi/widgets/userEmailView.dart';
 import 'package:flutterPaginationApi/widgets/userImageView.dart';
 import 'package:flutterPaginationApi/widgets/userNameView.dart';

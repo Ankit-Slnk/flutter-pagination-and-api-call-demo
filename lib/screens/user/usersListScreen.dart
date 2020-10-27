@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutterPaginationApi/bloc/selectedUserIdBloc.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
+import 'package:flutterPaginationApi/screens/user/userScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
 import 'package:flutterPaginationApi/widgets/userItemView.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import 'userDetailScreen.dart';
@@ -23,7 +26,6 @@ class _UsersListScreenState extends State<UsersListScreen> {
       new GlobalKey<RefreshIndicatorState>();
   bool isLoading = false;
   bool stop = false;
-  AppDimens appDimens;
 
   getUsers() async {
     //first check for internet connectivity
@@ -102,17 +104,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          "Users",
-          style: TextStyle(
-            fontSize: appDimens.text18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: "Users".text.medium.size(18).make(),
       ),
       body: body(),
     );
@@ -189,13 +184,16 @@ class _UsersListScreenState extends State<UsersListScreen> {
     return UserItemView(
       userDetails: userDetails[index],
       onTap: () {
-        Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (BuildContext context) => UserDetailScreen(
-              id: userDetails[index].id,
+        SelectedUserIdBloc().setSelectedUserId(userDetails[index].id);
+        if (!Utility.isNotMobileAndLandscape(context)) {
+          Navigator.of(context).push(
+            new MaterialPageRoute(
+              builder: (BuildContext context) => UserDetailScreen(
+                selectedUserId: userDetails[index].id,
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
       onImageTap: () {
         Navigator.of(context).push(

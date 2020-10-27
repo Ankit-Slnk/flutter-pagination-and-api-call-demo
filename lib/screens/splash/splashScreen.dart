@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/screens/usersListScreen.dart';
+import 'package:flutterPaginationApi/screens/user/userScreen.dart';
 import 'package:flutterPaginationApi/utility/appColors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   gotoHome() {
     Navigator.of(context).pushAndRemoveUntil(
         new MaterialPageRoute(
-          builder: (BuildContext context) => UsersListScreen(),
+          builder: (BuildContext context) => UserScreen(),
         ),
         (Route<dynamic> route) => false);
   }

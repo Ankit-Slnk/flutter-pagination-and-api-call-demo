@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
+import 'package:velocity_x/velocity_x.dart';
 
 import '../models/UsersResponse.dart';
 import '../utility/appColors.dart';
@@ -12,21 +13,19 @@ class UserNameView extends StatelessWidget {
     @required this.isDetailScreen,
   });
 
-  AppDimens appDimens;
-
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
-
-    return Text(
-      userDetails?.firstName == null
-          ? ""
-          : userDetails.firstName + " " + userDetails.lastName,
-      style: TextStyle(
-        fontSize: isDetailScreen ? appDimens.text20 : appDimens.text18,
-        color: AppColors.blackColor,
-        fontWeight: FontWeight.bold,
-      ),
-    );
+    String name = userDetails?.firstName == null
+        ? ""
+        : userDetails.firstName + " " + userDetails.lastName;
+    return name.text
+        .size(isDetailScreen ? 20 : 18)
+        .textStyle(
+          TextStyle(
+            color: AppColors.blackColor,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+        .make();
   }
 }

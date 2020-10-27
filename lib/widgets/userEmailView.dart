@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/utility/appDimens.dart';
+
+import 'package:velocity_x/velocity_x.dart';
 
 import '../models/UsersResponse.dart';
 import '../utility/appColors.dart';
@@ -12,18 +13,12 @@ class UserEmailView extends StatelessWidget {
     @required this.isDetailScreen,
   });
 
-  AppDimens appDimens;
-
   @override
   Widget build(BuildContext context) {
-    appDimens = new AppDimens(MediaQuery.of(context).size);
-
-    return Text(
-      userDetails?.email == null ? "" : userDetails.email,
-      style: TextStyle(
-        fontSize: appDimens.text16,
-        color: AppColors.greyColor,
-      ),
-    );
+    return (userDetails?.email == null ? "" : userDetails.email)
+        .text
+        .gray500
+        .size(16)
+        .make();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'appAssets.dart';
 import 'appColors.dart';
@@ -63,5 +64,9 @@ class Utility {
             // (url.startsWith("http")) ? url : AppStrings.IMAGEBASE_URL + url,
             fit: BoxFit.contain,
           );
+  }
+
+  static bool isNotMobileAndLandscape(BuildContext context) {
+    return !context.isMobile && context.isLandscape;
   }
 }
