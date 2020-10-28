@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutterPaginationApi/bloc/selectedUserIdBloc.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
-import 'package:flutterPaginationApi/screens/user/userScreen.dart';
+import 'package:flutterPaginationApi/screens/user/userDetailScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
 import 'package:flutterPaginationApi/widgets/userItemView.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
-import 'userDetailScreen.dart';
 
 class UsersListScreen extends StatefulWidget {
   @override
@@ -108,6 +105,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: "Users".text.medium.size(18).make(),
+        actions: [Utility.githubAction(), Utility.websiteAction()],
       ),
       body: body(),
     );
@@ -184,8 +182,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
     return UserItemView(
       userDetails: userDetails[index],
       onTap: () {
-        SelectedUserIdBloc().setSelectedUserId(userDetails[index].id);
-        if (!Utility.isNotMobileAndLandscape(context)) {
+        if (Utility.isNotMobileAndLandscape(context)) {
+          SelectedUserIdBloc().setSelectedUserId(userDetails[index].id);
+        } else {
           Navigator.of(context).push(
             new MaterialPageRoute(
               builder: (BuildContext context) => UserDetailScreen(
@@ -196,13 +195,18 @@ class _UsersListScreenState extends State<UsersListScreen> {
         }
       },
       onImageTap: () {
-        Navigator.of(context).push(
-          new MaterialPageRoute(
-            builder: (BuildContext context) => FullScrennImageSlider(
-              imagelist: [userDetails[index].avatar],
-              selectedimage: 0,
+        showDialog(
+          child: AlertDialog(
+            content: Container(
+              height: 250,
+              width: 250,
+              child: FullScreenImageSlider(
+                imagelist: [userDetails[index].avatar],
+                selectedimage: 0,
+              ),
             ),
           ),
+          context: context,
         );
       },
     );

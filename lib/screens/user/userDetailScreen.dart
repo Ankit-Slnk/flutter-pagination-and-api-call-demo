@@ -4,7 +4,6 @@ import 'package:flutterPaginationApi/models/SingleUserResponse.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
 import 'package:flutterPaginationApi/screens/user/userScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
-
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
@@ -84,73 +83,108 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   }
 
   Widget body() {
-    return Stack(
+    return Column(
       children: [
-        Column(
-          children: [
-            Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: kToolbarHeight),
-                  height: kToolbarHeight * 2,
-                  decoration: BoxDecoration(
-                    color: AppColors.appColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0.0, 1.0), //(x,y)
-                        blurRadius: 6.0,
-                      ),
-                    ],
-                  ),
-                  child: Utility.isNotMobileAndLandscape(context)
-                      ? Container()
-                      : Container(
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              BackButton(
-                                color: AppColors.whiteColor,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  height: kToolbarHeight * 3,
-                  child: Column(
+        Expanded(
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Stack(
                     children: [
-                      SizedBox(
-                        height: kToolbarHeight,
-                      ),
-                      UserImageView(
-                        userDetails: userDetails,
-                        onImageTap: () {
-                          Navigator.of(context).push(
-                            new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  FullScrennImageSlider(
-                                imagelist: [userDetails.avatar],
-                                selectedimage: 0,
-                              ),
+                      Container(
+                        padding: EdgeInsets.only(top: kToolbarHeight),
+                        height: kToolbarHeight * 2,
+                        decoration: BoxDecoration(
+                          color: AppColors.appColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
                             ),
-                          );
-                        },
-                        isDetailScreen: true,
+                          ],
+                        ),
+                        child: Utility.isNotMobileAndLandscape(context) &&
+                                widget.selectedUserId == null
+                            ? Container()
+                            : Container(
+                                padding: EdgeInsets.only(left: 8),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    BackButton(
+                                      color: AppColors.whiteColor,
+                                      onPressed: () {
+                                        if (Utility.isNotMobileAndLandscape(
+                                                context) &&
+                                            widget.selectedUserId == null) {
+                                          SelectedUserIdBloc()
+                                              .setSelectedUserId(null);
+                                        } else {
+                                          // case where detail page is open in portrait mode
+                                          // and converted to landscape.
+                                          // Then we need to open userScreen again. 
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  new MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        UserScreen(),
+                                                  ),
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        height: kToolbarHeight * 3,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: kToolbarHeight,
+                            ),
+                            UserImageView(
+                              userDetails: userDetails,
+                              onImageTap: () {
+                                showDialog(
+                                  child: AlertDialog(
+                                    content: Container(
+                                      height: 250,
+                                      width: 250,
+                                      child: FullScreenImageSlider(
+                                        imagelist: [userDetails.avatar],
+                                        selectedimage: 0,
+                                      ),
+                                    ),
+                                  ),
+                                  context: context,
+                                );
+                              },
+                              isDetailScreen: true,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            userNameView()
-          ],
+                  userNameView()
+                ],
+              ),
+              isLoading ? Utility.progress(context) : Container()
+            ],
+          ),
         ),
-        isLoading ? Utility.progress(context) : Container()
+        Container(
+          padding: EdgeInsets.only(bottom: 8),
+          alignment: Alignment.bottomCenter,
+          child: Text("Made with ♥ in Flutter"),
+        )
       ],
     );
   }

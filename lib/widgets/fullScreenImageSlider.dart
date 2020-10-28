@@ -7,20 +7,20 @@ import 'package:photo_view/photo_view_gallery.dart';
 import '../utility/appAssets.dart';
 import '../utility/utiity.dart';
 
-class FullScrennImageSlider extends StatefulWidget {
+class FullScreenImageSlider extends StatefulWidget {
   final List<String> imagelist;
   final int selectedimage;
 
-  FullScrennImageSlider({
+  FullScreenImageSlider({
     Key key,
     @required this.imagelist,
     @required this.selectedimage,
   }) : super(key: key);
   @override
-  _FullScrennImageSliderState createState() => _FullScrennImageSliderState();
+  _FullScreenImageSliderState createState() => _FullScreenImageSliderState();
 }
 
-class _FullScrennImageSliderState extends State<FullScrennImageSlider> {
+class _FullScreenImageSliderState extends State<FullScreenImageSlider> {
   var _current = 0;
 
   @override
@@ -32,9 +32,6 @@ class _FullScrennImageSliderState extends State<FullScrennImageSlider> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-      ),
       body: Container(
         child: slider(),
       ),

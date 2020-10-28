@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'appAssets.dart';
@@ -68,5 +69,43 @@ class Utility {
 
   static bool isNotMobileAndLandscape(BuildContext context) {
     return !context.isMobile && context.isLandscape;
+  }
+
+  static Widget websiteAction() {
+    return InkWell(
+      customBorder: CircleBorder(),
+      child: Container(
+        padding: EdgeInsets.all(13),
+        child: Image.asset(
+          "assets/images/website_white.png",
+        ),
+      ),
+      onTap: () {
+        launchURL("https://ankitsolanki.netlify.app/");
+      },
+    );
+  }
+
+  static Widget githubAction() {
+    return InkWell(
+      customBorder: CircleBorder(),
+      child: Container(
+        padding: EdgeInsets.all(12),
+        child: Image.asset(
+          "assets/images/github_white.png",
+        ),
+      ),
+      onTap: () {
+        launchURL("https://github.com/Ankit-Slnk");
+      },
+    );
+  }
+
+  static launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

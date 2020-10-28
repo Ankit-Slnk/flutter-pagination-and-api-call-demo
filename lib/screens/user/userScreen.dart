@@ -10,9 +10,11 @@ class UserScreen extends StatelessWidget {
       return Row(
         children: [
           Expanded(
+            flex: 4,
             child: UsersListScreen(),
           ),
           Expanded(
+            flex: 6,
             child: UserDetailScreen(
               selectedUserId: null,
             ),
