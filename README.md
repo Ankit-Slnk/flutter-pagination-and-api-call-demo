@@ -249,6 +249,6 @@ Finally
 
     flutter run
 
-##### Please refer to my [blogs](https://ankitsolanki.netlify.app/blog.html) for more information.
+<!-- ##### Please refer to my [blogs](https://ankitsolanki.netlify.app/blog.html) for more information. -->
 
 Checkout [this demo](https://flutter-web-pagination-api-call.netlify.app/#/) in [Flutter Web](https://flutter.dev/docs/get-started/web).
