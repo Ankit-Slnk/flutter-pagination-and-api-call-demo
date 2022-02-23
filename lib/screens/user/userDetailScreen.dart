@@ -124,7 +124,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                         } else {
                                           // case where detail page is open in portrait mode
                                           // and converted to landscape.
-                                          // Then we need to open userScreen again. 
+                                          // Then we need to open userScreen again.
                                           Navigator.of(context)
                                               .pushAndRemoveUntil(
                                                   new MaterialPageRoute(
@@ -153,16 +153,18 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                               userDetails: userDetails,
                               onImageTap: () {
                                 showDialog(
-                                  child: AlertDialog(
-                                    content: Container(
-                                      height: 250,
-                                      width: 250,
-                                      child: FullScreenImageSlider(
-                                        imagelist: [userDetails.avatar],
-                                        selectedimage: 0,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Container(
+                                        height: 250,
+                                        width: 250,
+                                        child: FullScreenImageSlider(
+                                          imagelist: [userDetails.avatar],
+                                          selectedimage: 0,
+                                        ),
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                   context: context,
                                 );
                               },

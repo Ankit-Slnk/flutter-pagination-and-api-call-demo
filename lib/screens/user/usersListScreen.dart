@@ -196,16 +196,18 @@ class _UsersListScreenState extends State<UsersListScreen> {
       },
       onImageTap: () {
         showDialog(
-          child: AlertDialog(
-            content: Container(
-              height: 250,
-              width: 250,
-              child: FullScreenImageSlider(
-                imagelist: [userDetails[index].avatar],
-                selectedimage: 0,
+          builder: (context) {
+            return AlertDialog(
+              content: Container(
+                height: 250,
+                width: 250,
+                child: FullScreenImageSlider(
+                  imagelist: [userDetails[index].avatar],
+                  selectedimage: 0,
+                ),
               ),
-            ),
-          ),
+            );
+          },
           context: context,
         );
       },
