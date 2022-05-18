@@ -26,12 +26,12 @@ class ApiManager {
   }
 
   postCall({@required String url, @required Map request}) async {
-    http.Response response = await http.post(url, body: request);
+    http.Response response = await http.post(Uri.parse(url), body: request);
     return await json.decode(response.body);
   }
 
   deleteCall({@required String url}) async {
-    http.Response response = await http.delete(url);
+    http.Response response = await http.delete(Uri.parse(url));
     return await jsonDecode(response.body);
   }
 

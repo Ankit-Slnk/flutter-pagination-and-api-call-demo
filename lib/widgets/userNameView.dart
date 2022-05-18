@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
 import '../models/UsersResponse.dart';
 import '../utility/appColors.dart';
 
@@ -18,14 +16,13 @@ class UserNameView extends StatelessWidget {
     String name = userDetails?.firstName == null
         ? ""
         : userDetails.firstName + " " + userDetails.lastName;
-    return name.text
-        .size(isDetailScreen ? 20 : 18)
-        .textStyle(
-          TextStyle(
-            color: AppColors.blackColor,
-            fontWeight: FontWeight.bold,
-          ),
-        )
-        .make();
+    return Text(
+      name,
+      style: TextStyle(
+        color: AppColors.blackColor,
+        fontWeight: FontWeight.bold,
+        fontSize: isDetailScreen ? 20 : 18,
+      ),
+    );
   }
 }

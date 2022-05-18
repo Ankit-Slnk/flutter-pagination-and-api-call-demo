@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/bloc/selectedUserIdBloc.dart';
 import 'package:flutterPaginationApi/models/SingleUserResponse.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
-import 'package:flutterPaginationApi/screens/user/userScreen.dart';
+import 'package:flutterPaginationApi/screens/user/usersListScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
 import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
@@ -10,7 +9,6 @@ import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
 import 'package:flutterPaginationApi/widgets/userEmailView.dart';
 import 'package:flutterPaginationApi/widgets/userImageView.dart';
 import 'package:flutterPaginationApi/widgets/userNameView.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../../utility/appColors.dart';
 
@@ -30,13 +28,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.selectedUserId == null) {
-      SelectedUserIdBloc.getSteam.listen((event) {
-        getUser(event);
-      });
-    } else {
-      getUser(widget.selectedUserId);
-    }
+    getUser(widget.selectedUserId);
   }
 
   getUser(int selectedUserId) async {
@@ -105,41 +97,25 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                             ),
                           ],
                         ),
-                        child: Utility.isNotMobileAndLandscape(context) &&
-                                widget.selectedUserId == null
-                            ? Container()
-                            : Container(
-                                padding: EdgeInsets.only(left: 8),
-                                alignment: Alignment.center,
-                                child: Row(
-                                  children: [
-                                    BackButton(
-                                      color: AppColors.whiteColor,
-                                      onPressed: () {
-                                        if (Utility.isNotMobileAndLandscape(
-                                                context) &&
-                                            widget.selectedUserId == null) {
-                                          SelectedUserIdBloc()
-                                              .setSelectedUserId(null);
-                                        } else {
-                                          // case where detail page is open in portrait mode
-                                          // and converted to landscape.
-                                          // Then we need to open userScreen again.
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                                  new MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        UserScreen(),
-                                                  ),
-                                                  (Route<dynamic> route) =>
-                                                      false);
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 8),
+                          alignment: Alignment.center,
+                          child: Row(
+                            children: [
+                              BackButton(
+                                color: AppColors.whiteColor,
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      new MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            UsersListScreen(),
+                                      ),
+                                      (Route<dynamic> route) => false);
+                                },
                               ),
+                            ],
+                          ),
+                        ),
                       ),
                       Container(
                         alignment: Alignment.center,
@@ -201,7 +177,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           userDetails: userDetails,
         ),
         SizedBox(
-          height: Vx.dp4,
+          height: 16,
         ),
         UserEmailView(
           userDetails: userDetails,

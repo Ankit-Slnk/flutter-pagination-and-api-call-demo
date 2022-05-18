@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterPaginationApi/bloc/selectedUserIdBloc.dart';
 import 'package:flutterPaginationApi/models/UsersResponse.dart';
 import 'package:flutterPaginationApi/screens/user/userDetailScreen.dart';
 import 'package:flutterPaginationApi/utility/apiManager.dart';
@@ -7,7 +6,6 @@ import 'package:flutterPaginationApi/utility/appStrings.dart';
 import 'package:flutterPaginationApi/utility/utiity.dart';
 import 'package:flutterPaginationApi/widgets/fullScreenImageSlider.dart';
 import 'package:flutterPaginationApi/widgets/userItemView.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class UsersListScreen extends StatefulWidget {
@@ -104,7 +102,13 @@ class _UsersListScreenState extends State<UsersListScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: "Users".text.medium.size(18).make(),
+        title: Text(
+          "Users",
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),
+        ),
         actions: [Utility.githubAction(), Utility.websiteAction()],
       ),
       body: body(),
@@ -182,17 +186,13 @@ class _UsersListScreenState extends State<UsersListScreen> {
     return UserItemView(
       userDetails: userDetails[index],
       onTap: () {
-        if (Utility.isNotMobileAndLandscape(context)) {
-          SelectedUserIdBloc().setSelectedUserId(userDetails[index].id);
-        } else {
-          Navigator.of(context).push(
-            new MaterialPageRoute(
-              builder: (BuildContext context) => UserDetailScreen(
-                selectedUserId: userDetails[index].id,
-              ),
+        Navigator.of(context).push(
+          new MaterialPageRoute(
+            builder: (BuildContext context) => UserDetailScreen(
+              selectedUserId: userDetails[index].id,
             ),
-          );
-        }
+          ),
+        );
       },
       onImageTap: () {
         showDialog(

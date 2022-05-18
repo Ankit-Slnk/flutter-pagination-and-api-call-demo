@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:velocity_x/velocity_x.dart';
-
 import '../models/UsersResponse.dart';
 import '../utility/appColors.dart';
 
@@ -15,10 +13,12 @@ class UserEmailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return (userDetails?.email == null ? "" : userDetails.email)
-        .text
-        .gray500
-        .size(16)
-        .make();
+    return Text(
+      userDetails?.email == null ? "" : userDetails.email,
+      style: TextStyle(
+        color: Colors.grey,
+        fontSize: 16,
+      ),
+    );
   }
 }
