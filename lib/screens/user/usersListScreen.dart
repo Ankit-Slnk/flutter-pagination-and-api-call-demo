@@ -14,7 +14,7 @@ class UsersListScreen extends StatefulWidget {
 }
 
 class _UsersListScreenState extends State<UsersListScreen> {
-  List<UserDetails> userDetails = List();
+  List<UserDetails> userDetails = [];
   int page = 0;
   int valueKey = 0;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
