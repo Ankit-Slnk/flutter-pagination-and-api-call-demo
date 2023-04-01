@@ -76,7 +76,7 @@ class Utility {
         ),
       ),
       onTap: () {
-        launchURL("https://ankitsolanki.netlify.app/");
+        launchURL("https://ankitsolanki.dev/");
       },
     );
   }

@@ -13,6 +13,8 @@ import 'package:flutterPaginationApi/screens/splash/splashScreen.dart';
 
 import 'utility/appColors.dart';
 
+// flutter 3.3.0
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
